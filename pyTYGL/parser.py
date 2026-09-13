@@ -1,5 +1,5 @@
 """
-MOMEL parser — Mauricio's Obvious Minimal Expandable Language.
+TYGL parser — Mauricio's Obvious Minimal Expandable Language.
 
 Public API:
     parse(text: str) -> dict
@@ -13,7 +13,6 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass
 
-
 # ---------------------------------------------------------------------------
 # Data model
 # ---------------------------------------------------------------------------
@@ -21,7 +20,7 @@ from dataclasses import dataclass
 
 @dataclass
 class Number:
-    """A MOMEL number value with an optional unit suffix."""
+    """A TYGL number value with an optional unit suffix."""
 
     value: int | float
     # Empty string when no suffix was present.
@@ -66,7 +65,7 @@ _ESCAPE_MAP: dict[str, str] = {
     "\\": "\\",
 }
 
-# Characters that start/delimit special MOMEL values.
+# Characters that start/delimit special TYGL values.
 _STRUCTURAL = set("()[]{}\"' \t\n")
 
 _WHITESPACE = set(" \t")
@@ -77,16 +76,21 @@ _DEC_DIGITS = set("0123456789")
 _OCT_DIGITS = set("01234567")
 _BIN_DIGITS = set("01")
 _BASE_PREFIX = {
-    "x": (16, _HEX_DIGITS), "X": (16, _HEX_DIGITS),
-    "b": (2, _BIN_DIGITS),  "B": (2, _BIN_DIGITS),
-    "o": (8, _OCT_DIGITS),  "O": (8, _OCT_DIGITS),
+    "x": (16, _HEX_DIGITS),
+    "X": (16, _HEX_DIGITS),
+    "b": (2, _BIN_DIGITS),
+    "B": (2, _BIN_DIGITS),
+    "o": (8, _OCT_DIGITS),
+    "O": (8, _OCT_DIGITS),
 }
 
 
 _HEX_ESC_LEN = {"x": 2, "u": 4, "U": 8}
 
 
-def _hex_esc(src: str, pos: int, count: int, ch: str, line: int, col: int) -> tuple[str, int]:
+def _hex_esc(
+    src: str, pos: int, count: int, ch: str, line: int, col: int
+) -> tuple[str, int]:
     """Parse \\xHH, \\uHHHH, or \\UHHHHHHHH escape at src[pos] (on the escape letter)."""
     h = src[pos + 1 : pos + 1 + count]
     if len(h) < count or not all(c in _HEX_DIGITS for c in h):
@@ -117,14 +121,13 @@ def decode_escape(src: str, pos: int, line: int, col: int) -> tuple[str, int]:
     raise ParseError(f"unknown escape sequence: \\{ch}", line, col)
 
 
-
 # ---------------------------------------------------------------------------
 # Parser
 # ---------------------------------------------------------------------------
 
 
 class _Parser:
-    """Stateful recursive-descent MOMEL parser."""
+    """Stateful recursive-descent TYGL parser."""
 
     def __init__(self, src: str) -> None:
         self.src = src
@@ -393,7 +396,7 @@ class _Parser:
 
     def _parse_number(self) -> Number:
         """
-        Parse a MOMEL number: optional sign, optional base prefix,
+        Parse a TYGL number: optional sign, optional base prefix,
         significand digits (with _ separators and optional decimal point),
         optional scientific exponent (_+N or _-N), optional unit suffix.
         """
@@ -670,13 +673,13 @@ def _merge_dicts(a: dict, b: dict) -> dict:
 
 
 def parse(text: str) -> dict:
-    """Parse a MOMEL string and return the top-level dictionary."""
+    """Parse a TYGL string and return the top-level dictionary."""
     # Normalize line endings.
     text = text.replace("\r\n", "\n").replace("\r", "\n")
     return _Parser(text).parse_top_level()
 
 
 def parse_file(path: str | os.PathLike) -> dict:
-    """Read a MOMEL file (UTF-8) and return the top-level dictionary."""
+    """Read a TYGL file (UTF-8) and return the top-level dictionary."""
     with open(path, encoding="utf-8") as f:
         return parse(f.read())

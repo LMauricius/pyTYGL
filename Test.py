@@ -1,9 +1,9 @@
-import pyMOMEL
-from pyMOMEL import Number
-
+import pyTYGL
+from pyTYGL import Number
 
 def pprint(val, multiline: bool, indent=0):
-    """Pretty print parsed MOMEL data as aligned Python objects."""
+    """Pretty print parsed TYGL data as aligned Python objects."""
+
     pad = "  " * indent
     end = "\n" if multiline else ""
 
@@ -220,7 +220,7 @@ for testStr in TESTS:
     print(testStr.strip())
     print("--------------------------------------------------------------------------")
     try:
-        res = pyMOMEL.parse(testStr)
+        res = pyTYGL.parse(testStr)
         print(pprint(res, True).strip())
     except Exception as e:
         print(repr(e))
