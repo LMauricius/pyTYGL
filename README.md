@@ -1,4 +1,4 @@
-# pyMOMEL
-A python parser implementation for the MOMEL language - Mauricio's Obvious Minimal Expandable Language
+# pyTYGL
+A python parser implementation for the TYGL language - Tiny Generic Language
 
-The specification is always updated at the repository: [LMauricius/MOMEL-spec](https://github.com/LMauricius/MOMEL-spec)
+The specification is always updated at the repository: [LMauricius/TYGL-spec](https://github.com/LMauricius/TYGL-spec)
